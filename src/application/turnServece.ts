@@ -5,6 +5,10 @@ import { MoveGateway } from '../dataaccess/moveGateway'
 import { SquareGateway } from '../dataaccess/squareGateway'
 import { connectMySQL } from '../dataaccess/connection'
 import { DARK, LIGHT } from '../application/constants'
+import { Board } from '../domain/board'
+import { Turn } from '../domain/turn'
+import { toDisc } from '../domain/disc'
+import { Point } from '../domain/point'
 
 const gameGateway = new GameGateway()
 const turnGateway = new TurnGateway()
@@ -114,26 +118,29 @@ export class TurnService {
         board[s.y][s.x] = s.disc
       })
 
-      // TODO: 盤面に置けるかチェック
+      const previousTurn = new Turn(
+        gameRecord.id,
+        previousTurnCount,
+        toDisc(previousTurnRecord.nextDisc),
+        undefined,
+        new Board(board),
+        previousTurnRecord.endAt
+      )
 
       // 石を置く
-      board[y][x] = disc
-
-      // TODO: ひっくり返す
+      const newTurn = previousTurn.placeNext(toDisc(disc), new Point(x, y))
 
       // ターンを保存
-      const nextDisc = disc === DARK ? LIGHT : DARK
-      const now = new Date()
       const turnRecord = await turnGateway.insert(
         conn,
-        gameRecord.id,
-        turnCount,
-        nextDisc,
-        now
+        newTurn.gameId,
+        newTurn.turnCount,
+        newTurn.nextDisc,
+        newTurn.endAt
       )
 
       // 盤面の状態を保存
-      await squareGateway.insertAll(conn, turnRecord.id, board)
+      await squareGateway.insertAll(conn, turnRecord.id, newTurn.board.discs)
 
       // 打った手を保存
       await moveGateway.insert(conn, turnRecord.id, disc, x, y)

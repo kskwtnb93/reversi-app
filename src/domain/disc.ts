@@ -5,3 +5,8 @@ export const Disc = {
 } as const
 
 export type Disc = (typeof Disc)[keyof typeof Disc]
+
+export function toDisc(value: number): Disc {
+  // TODO: あとで改善
+  return value as Disc
+}
