@@ -1,12 +1,11 @@
 import { GameGateway } from '../dataaccess/gameGateway'
-import { TurnGateway } from '../dataaccess/turnGateway'
-import { SquareGateway } from '../dataaccess/squareGateway'
 import { connectMySQL } from '../dataaccess/connection'
-import { DARK, INITIAL_BOARD } from '../application/constants'
+import { TurnRepository } from '../domain/turnRepository'
+import { firstTurn } from '../domain/turn'
 
 const gameGateway = new GameGateway()
-const turnGateway = new TurnGateway()
-const squareGateway = new SquareGateway()
+
+const turnRepository = new TurnRepository()
 
 export class GameService {
   async startNewGame() {
@@ -19,17 +18,9 @@ export class GameService {
       // 対戦を保存
       const gameRecord = await gameGateway.insert(conn, now)
 
-      // ターンを保存
-      const turnRecord = await turnGateway.insert(
-        conn,
-        gameRecord.id,
-        0,
-        DARK,
-        now
-      )
-
-      // 盤面の状態を保存
-      await squareGateway.insertAll(conn, turnRecord.id, INITIAL_BOARD)
+      // ターン／盤面の初期状態を保存
+      const turn = firstTurn(gameRecord.id, now)
+      await turnRepository.save(conn, turn)
 
       await conn.commit()
     } finally {

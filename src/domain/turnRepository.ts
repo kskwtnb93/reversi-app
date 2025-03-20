@@ -7,7 +7,6 @@ import { Move } from './move'
 import { toDisc } from './disc'
 import { Point } from './point'
 import { Board } from './board'
-import { Connection } from '../../node_modules/mysql2/index.d'
 
 const turnGateway = new TurnGateway()
 const squareGateway = new SquareGateway()
@@ -61,6 +60,7 @@ export class TurnRepository {
 
   // ターンを保存
   async save(conn: mysql.Connection, turn: Turn) {
+    // ターンを保存
     const turnRecord = await turnGateway.insert(
       conn,
       turn.gameId,
