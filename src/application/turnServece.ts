@@ -1,8 +1,8 @@
 import { GameGateway } from '../dataaccess/gameGateway'
 import { connectMySQL } from '../dataaccess/connection'
-import { toDisc } from '../domain/disc'
-import { Point } from '../domain/point'
-import { TurnRepository } from '../domain/turnRepository'
+import { toDisc } from '../domain/turn/disc'
+import { Point } from '../domain/turn/point'
+import { TurnRepository } from '../domain/turn/turnRepository'
 
 const gameGateway = new GameGateway()
 
