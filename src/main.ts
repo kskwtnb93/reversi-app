@@ -42,12 +42,3 @@ function errorHandler(
     message: 'Unexpected error occurred',
   })
 }
-
-async function connectMySQL() {
-  return await mysql.createConnection({
-    host: 'localhost',
-    database: 'reversi',
-    user: 'reversi',
-    password: 'password',
-  })
-}
