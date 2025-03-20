@@ -1,4 +1,4 @@
-import { connectMySQL } from '../dataaccess/connection'
+import { connectMySQL } from '../infrastructure/connection'
 import { toDisc } from '../domain/turn/disc'
 import { Point } from '../domain/turn/point'
 import { TurnRepository } from '../domain/turn/turnRepository'
