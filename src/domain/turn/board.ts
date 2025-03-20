@@ -95,10 +95,12 @@ export class Board {
     if (this._discs[move.point.y][move.point.x] !== Disc.Empty) {
       throw new Error('Selected point is not empty')
     }
-    // ひっくり返せる点がない場合、置くことはできない
+
+    // ひっくり返せる座標をリストアップする
     const flipPoints = this.listFlipPoints(move)
+
+    // ひっくり返せる点がない場合、置くことはできない
     if (flipPoints.length === 0) {
-      console.log(move)
       throw new Error('Flip points is empty')
     }
 
@@ -110,7 +112,10 @@ export class Board {
     // 石を置く
     newDiscs[move.point.y][move.point.x] = move.disc
 
-    // TODO: ひっくり返す
+    // ひっくり返す
+    flipPoints.forEach((p) => {
+      newDiscs[p.y][p.x] = move.disc
+    })
 
     return new Board(newDiscs)
   }
