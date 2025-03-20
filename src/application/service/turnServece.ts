@@ -1,8 +1,9 @@
-import { connectMySQL } from '../infrastructure/connection'
-import { toDisc } from '../domain/model/turn/disc'
-import { Point } from '../domain/model/turn/point'
-import { TurnRepository } from '../domain/model/turn/turnRepository'
-import { GameRepository } from '../domain/model/game/gameRepository'
+import { connectMySQL } from '../../infrastructure/connection'
+import { toDisc } from '../../domain/model/turn/disc'
+import { Point } from '../../domain/model/turn/point'
+import { TurnRepository } from '../../domain/model/turn/turnRepository'
+import { GameRepository } from '../../domain/model/game/gameRepository'
+import { ApplicationError } from '../error/applicationError'
 
 const turnRepository = new TurnRepository()
 const gameRepository = new GameRepository()
@@ -41,7 +42,10 @@ export class TurnService {
       // 対戦を取得
       const game = await gameRepository.findLatest(conn)
       if (!game) {
-        throw new Error('Latest game not found.')
+        throw new ApplicationError(
+          'LatestGameNotFound',
+          'Latest game not found.'
+        )
       }
       if (!game.id) {
         throw new Error('game.id not exist')
@@ -73,7 +77,10 @@ export class TurnService {
       // 対戦を取得
       const game = await gameRepository.findLatest(conn)
       if (!game) {
-        throw new Error('Latest game not found.')
+        throw new ApplicationError(
+          'LatestGameNotFound',
+          'Latest game not found.'
+        )
       }
       if (!game.id) {
         throw new Error('game.id not exist')

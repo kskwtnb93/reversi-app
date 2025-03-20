@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { GameService } from '../application/gameService'
+import { GameService } from '../application/service/gameService'
 
 export const gameRouter = express.Router()
 
