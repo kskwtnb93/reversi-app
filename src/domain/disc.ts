@@ -1,3 +1,7 @@
+/**
+ * disc: 石（駒）
+ */
+
 export const Disc = {
   Empty: 0,
   Dark: 1,

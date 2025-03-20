@@ -1,3 +1,7 @@
+/**
+ * move: 手（石を置くこと）
+ */
+
 import { Disc } from './disc'
 import { Point } from './point'
 

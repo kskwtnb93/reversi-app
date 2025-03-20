@@ -1,3 +1,7 @@
+/**
+ * turn: ターン（順番）
+ */
+
 import { Board } from './board'
 import { Disc } from './disc'
 import { Move } from './move'
@@ -38,7 +42,6 @@ export class Turn {
   }
 
   placeNext(disc: Disc, point: Point): Turn {
-    console.log('test', disc, this._nextDisc)
     // 打とうとした石が、次の石ではない場合、置くことはできない。
     if (disc !== this._nextDisc) {
       throw new Error('Invalid disc')

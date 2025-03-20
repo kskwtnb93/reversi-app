@@ -1,3 +1,7 @@
+/**
+ * board: 盤面、ゲームボード
+ */
+
 import { Disc } from './disc'
 import { Move } from './move'
 
