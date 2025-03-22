@@ -1,11 +1,11 @@
 import { connectMySQL } from '../../infrastructure/connection'
-import { TurnRepository } from '../../domain/model/turn/turnRepository'
 import { firstTurn } from '../../domain/model/turn/turn'
-import { GameRepository } from '../../domain/model/game/gameRepository'
 import { Game } from '../../domain/model/game/game'
+import { GameMySQLRepository } from '../../infrastructure/repository/game/gameMySQLRepository'
+import { TurnMySQLRepository } from '../../infrastructure/repository/turn/turnMySQLRepository'
 
-const turnRepository = new TurnRepository()
-const gameRepository = new GameRepository()
+const turnRepository = new TurnMySQLRepository()
+const gameRepository = new GameMySQLRepository()
 
 export class GameService {
   async startNewGame() {
