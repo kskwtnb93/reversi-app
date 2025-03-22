@@ -1,10 +1,15 @@
 import express from 'express'
 
 import { GameService } from '../application/service/gameService'
+import { GameMySQLRepository } from '../infrastructure/repository/game/gameMySQLRepository'
+import { TurnMySQLRepository } from '../infrastructure/repository/turn/turnMySQLRepository'
 
 export const gameRouter = express.Router()
 
-const gameService = new GameService()
+const gameService = new GameService(
+  new GameMySQLRepository(),
+  new TurnMySQLRepository()
+)
 
 // 対戦を開始するAPI
 gameRouter.post('/api/games', async (req, res) => {
