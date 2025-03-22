@@ -12,7 +12,7 @@ export class Turn {
   constructor(
     private _gameId: number,
     private _turnCount: number,
-    private _nextDisc: Disc,
+    private _nextDisc: Disc | undefined,
     private _move: Move | undefined,
     private _board: Board,
     private _endAt: Date
@@ -52,11 +52,8 @@ export class Turn {
     }
 
     const move = new Move(disc, point)
-
     const nextBoard = this._board.place(move)
-
-    // TODO: 次の石が置けない場合はスキップする処理
-    const nextDisc = disc === Disc.Dark ? Disc.Light : Disc.Dark
+    const nextDisc = this.dicideNextDisc(nextBoard, disc)
 
     return new Turn(
       this._gameId,
@@ -66,6 +63,24 @@ export class Turn {
       nextBoard,
       new Date()
     )
+  }
+
+  private dicideNextDisc(board: Board, previousDisc: Disc): Disc | undefined {
+    const existDarkValidMove = board.existValidMove(Disc.Dark)
+    const existLightValidMove = board.existValidMove(Disc.Light)
+
+    if (existDarkValidMove && existLightValidMove) {
+      // 両方おける場合は、前の医師と反対の石の番
+      return previousDisc === Disc.Dark ? Disc.Light : Disc.Dark
+    } else if (!existDarkValidMove && !existLightValidMove) {
+      // 両方置けない場合は、次の石はない
+      return undefined
+    } else if (existDarkValidMove) {
+      // 片方しか置けない場合は、おける方の石の番
+      return Disc.Dark
+    } else if (existLightValidMove) {
+      return Disc.Light
+    }
   }
 }
 
