@@ -42,6 +42,15 @@ export class Board {
     return false
   }
 
+  count(disc: Disc): number {
+    return this._discs
+      .map((line) => {
+        // 行ごとに引数に渡された石の種類でフィルターしてカウント
+        return line.filter((discOnBoard) => discOnBoard === disc).length
+      })
+      .reduce((v1, v2) => v1 + v2, 0)
+  }
+
   private wallDiscs(): Disc[][] {
     const walled: Disc[][] = []
     const topAndBottomWall = Array(this._discs[0].length + 2).fill(Disc.Wall)

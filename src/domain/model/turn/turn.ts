@@ -3,6 +3,7 @@
  */
 
 import { DomainError } from '../../error/domainError'
+import { WinnerDisc } from '../gameReult/winnerDisc'
 import { Board, initialBoard } from './board'
 import { Disc } from './disc'
 import { Move } from './move'
@@ -63,6 +64,29 @@ export class Turn {
       nextBoard,
       new Date()
     )
+  }
+
+  gameEnded(): boolean {
+    return this.nextDisc === undefined
+  }
+
+  /**
+   * 勝敗の判定
+   */
+  winnerDisc(): WinnerDisc {
+    const darkCount = this._board.count(Disc.Dark)
+    const lightCount = this._board.count(Disc.Light)
+
+    if (darkCount === lightCount) {
+      // 引き分け
+      return WinnerDisc.Draw
+    } else if (darkCount > lightCount) {
+      // 黒の勝ち
+      return WinnerDisc.Dark
+    } else {
+      // 白の勝ち
+      return WinnerDisc.Light
+    }
   }
 
   private dicideNextDisc(board: Board, previousDisc: Disc): Disc | undefined {
