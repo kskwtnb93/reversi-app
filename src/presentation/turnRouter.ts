@@ -1,14 +1,20 @@
 import express from 'express'
-import { TurnService } from '../application/service/turnServece'
+import { RegisterTurnUseCase } from '../application/useCase/registerTurnUseCase'
 import { Point } from '../domain/model/turn/point'
 import { toDisc } from '../domain/model/turn/disc'
 import { GameMySQLRepository } from '../infrastructure/repository/game/gameMySQLRepository'
 import { TurnMySQLRepository } from '../infrastructure/repository/turn/turnMySQLRepository'
 import { GameResultMySQLRepository } from '../infrastructure/repository/gameResult/GameResultMySQLRepository'
+import { FindLatestGameTurnByTurnCount } from '../application/useCase/FindLatestGameTurnByTurnCount'
 
 export const turnRouter = express.Router()
 
-const turnService = new TurnService(
+const registerTurnUseCase = new RegisterTurnUseCase(
+  new GameMySQLRepository(),
+  new TurnMySQLRepository(),
+  new GameResultMySQLRepository()
+)
+const findLatestGameTurnByTurnCount = new FindLatestGameTurnByTurnCount(
   new GameMySQLRepository(),
   new TurnMySQLRepository(),
   new GameResultMySQLRepository()
@@ -27,7 +33,7 @@ turnRouter.get(
   async (req, res: express.Response<TurnGetResponseBody>) => {
     const turnCount = parseInt(req.params.turnCount)
 
-    const output = await turnService.findLatestGameTurnByCount(turnCount)
+    const output = await findLatestGameTurnByTurnCount.run(turnCount)
     const responseBody = {
       turnCount: output.turnCount,
       board: output.board,
@@ -56,7 +62,7 @@ turnRouter.post(
     const disc = toDisc(req.body.move.disc)
     const point = new Point(req.body.move.x, req.body.move.y)
 
-    await turnService.registerTurn(turnCount, disc, point)
+    await registerTurnUseCase.run(turnCount, disc, point)
 
     res.status(201).end()
   }
